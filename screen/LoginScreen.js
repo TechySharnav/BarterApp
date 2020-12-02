@@ -42,9 +42,8 @@ export default class LoginScreen extends Component {
           .auth()
           .signInWithEmailAndPassword(email, pwd);
         if (response) {
-          {
-            // this.props.navigation.navigate("Home");
-          }
+          this.props.navigation.navigate("Tab");
+
           Alert.alert("Success", "Logged in Successfully");
         }
       } catch (err) {
@@ -76,7 +75,10 @@ export default class LoginScreen extends Component {
                 Email: this.state.emailID,
               });
             }
-            Alert.alert("Success", "Registered Successfully");
+            Alert.alert(
+              "Success",
+              "Registered Successfully. Login to continue"
+            );
           }
         } catch (err) {
           Alert.alert("Error", err.message);
@@ -104,6 +106,13 @@ export default class LoginScreen extends Component {
                 justifyContent: "flex-end",
               }}
             >
+              <Header
+                backgroundColor="#f9688d"
+                centerComponent={{
+                  text: "Barter App",
+                  style: { color: "#ecf3f4", fontSize: 18, fontWeight: "bold" },
+                }}
+              ></Header>
               <TextInput
                 style={styles.textInputStyle}
                 placeholder="Enter Name"
@@ -225,7 +234,7 @@ export default class LoginScreen extends Component {
           <Header
             backgroundColor="#f9688d"
             centerComponent={{
-              text: "Book Santa",
+              text: "Barter App",
               style: { color: "#ecf3f4", fontSize: 18, fontWeight: "bold" },
             }}
           ></Header>
