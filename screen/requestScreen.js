@@ -11,7 +11,7 @@ import {
   Alert,
   FlatList,
 } from "react-native";
-import { Header } from "react-native-elements";
+import { Header, ListItem } from "react-native-elements";
 import db from "../config";
 import firebase from "firebase";
 
@@ -38,16 +38,19 @@ export default class requestScreen extends Component {
 
   getRequests = async () => {
     var email = await firebase.auth().currentUser.email;
-    var query = await db
+    this.unsub = await db
       .collection("Requests")
       .where("RequesterEmail", "==", email)
-      .onSnapshot((query) => {
-        query.docs.map(async (doc) => {
-          await this.setState({
-            allRequests: [...this.state.allRequests, doc.data()],
+      .onSnapshot(
+        (query) => {
+          query.docs.map(async (doc) => {
+            await this.setState({
+              allRequests: [...this.state.allRequests, doc.data()],
+            });
           });
-        });
-      });
+        },
+        (error) => this.unsub()
+      );
   };
 
   getDetails = async () => {
@@ -67,6 +70,7 @@ export default class requestScreen extends Component {
       Address: this.state.Address,
       Status: "pending",
       Name: this.state.Name,
+      UID: eval(this.generateUID()),
     });
     Alert.alert("Success", "Request Added Successfully");
     this.setState({ isVisible: false });
@@ -201,6 +205,10 @@ export default class requestScreen extends Component {
     );
   };
 
+  generateUID = () => {
+    return ("" + Math.random()).substring(2, 9);
+  };
+
   async componentDidMount() {
     await this.getDetails();
     await this.getRequests();
@@ -212,7 +220,6 @@ export default class requestScreen extends Component {
           this.setState({ buttonDisabled: true });
         }
       }
-      name = this.state.Name;
     }, 2000);
 
     this.forceUpdate();
@@ -252,34 +259,29 @@ export default class requestScreen extends Component {
         </TouchableOpacity>
 
         <FlatList
+          contentContainerStyle={{
+            alignSelf: "center",
+            width: "98%",
+            marginTop: 5,
+          }}
           data={this.state.allRequests}
           renderItem={({ item, index }) => (
-            <View
-              style={{
-                width: "95%",
-                backgroundColor: "#fbd0d0",
+            <ListItem
+              containerStyle={{
+                backgroundColor: "#f8d0d0",
                 borderColor: "#534859",
                 borderWidth: 4,
-                padding: 5,
-                alignSelf: "center",
                 opacity: item.Status === "pending" ? 0.5 : 1,
-                marginTop: 10,
               }}
-            >
-              <Text>
-                Name:
-                <Text style={{ color: "#534859" }}> {name}</Text>
-              </Text>
-              <Text style={{ fontSize: 12 }}>
-                Good/Service Requested:{" "}
-                <Text style={{ fontSize: 12, color: "#534859" }}>
-                  {item.RequestedService}
-                </Text>
-              </Text>
-              <Text>
-                Status: <Text style={{ color: "#534859" }}> {item.Status}</Text>
-              </Text>
-            </View>
+              titleStyle={{ color: "#534859", fontWeight: "bold" }}
+              title={"Name: " + item.Name}
+              subtitle={`Requested: ${item.RequestedService} \nStatus: ${item.Status}`}
+              rightElement={() => (
+                <TouchableOpacity>
+                  <Text>View</Text>
+                </TouchableOpacity>
+              )}
+            />
           )}
           keyExtractor={(item, index) => {
             index.toString();
