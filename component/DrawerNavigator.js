@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import SettingsScreen from "../screen/SettingsScreen";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import TabNavigator from "./TabNavigator";
 import NotificationScreen from "../screen/NotificationScreen";
@@ -29,6 +29,21 @@ const DrawerNavigator = createDrawerNavigator(
         drawerIcon: ({ focused }) => (
           <Image
             source={require("../assets/bell.png")}
+            style={{
+              width: 32,
+              height: 32,
+              tintColor: focused ? "#fbf0e8" : "#534859",
+            }}
+          />
+        ),
+      },
+    },
+    Settings: {
+      screen: SettingsScreen,
+      navigationOptions: {
+        drawerIcon: ({ focused }) => (
+          <Image
+            source={require("../assets/settings.png")}
             style={{
               width: 32,
               height: 32,
