@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Image } from "react-native";
 import requestScreen from "../screen/requestScreen";
-import offerScreen from "../screen/offerScreen";
+import StackNavigator from "./StackNavigator";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 
 const TabNavigator = createBottomTabNavigator(
   {
-    Offer: { screen: offerScreen },
+    Offer: { screen: StackNavigator },
     Request: { screen: requestScreen },
   },
   {

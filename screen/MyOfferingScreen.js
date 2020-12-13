@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { View, FlatList, Text, TouchableOpacity } from "react-native";
-import { Header, ListItem } from "react-native-elements";
 import db from "../config";
+import { Header, ListItem } from "react-native-elements";
 import firebase from "firebase";
 
-export default class offerScreen extends Component {
+export default class MyOfferScreen extends Component {
   constructor() {
     super();
 
@@ -14,31 +14,13 @@ export default class offerScreen extends Component {
     };
   }
 
-  async componentDidMount() {
-    await this.getRequests();
-    setTimeout(() => {
-      for (var i in this.state.allRequests) {
-        console.log(this.state.allRequests[i].RequesterEmail);
-        if (
-          this.state.allRequests[i].RequesterEmail ===
-          firebase.auth().currentUser.email
-        ) {
-          this.state.allRequests.splice(i, 1);
-        }
-      }
-    }, 1000);
-    setTimeout(() => {
-      this.setState({ func: true });
-    }, 1000);
-  }
-
-  getRequests = async () => {
+  fetchRequests = async () => {
     this.unsub = await db
       .collection("Requests")
-      .where("Status", "==", "pending")
+      .where("DonorEmail", "==", firebase.auth().currentUser.email)
       .onSnapshot(
-        (query) => {
-          query.docs.map(async (doc) => {
+        (snapshot) => {
+          snapshot.docs.map(async (doc) => {
             await this.setState({
               allRequests: [...this.state.allRequests, doc.data()],
             });
@@ -47,6 +29,18 @@ export default class offerScreen extends Component {
         (error) => this.unsub()
       );
   };
+
+  async componentDidMount() {
+    await this.fetchRequests();
+    await setTimeout(() => {
+      this.setState({ func: true });
+      console.log(this.state, "mount");
+    }, 2000);
+  }
+
+  componentWillUnmount() {
+    this.unsub();
+  }
 
   render() {
     return (
@@ -71,13 +65,15 @@ export default class offerScreen extends Component {
             <ListItem
               containerStyle={{ backgroundColor: "#f8d0d0" }}
               titleStyle={{ color: "#534859", fontWeight: "bold" }}
-              title={"Name: " + item.Name}
-              subtitle={`Requested: ${item.RequestedService} \nIn Return: ${item.ReturnService}`}
+              titleStyle={{ color: "#465461", fontWeight: "bold" }}
+              title={`Name: ${item.Name}`}
+              subtitle={`Service: ${item.RequestedService}`}
               rightElement={() => (
                 <TouchableOpacity
                   onPress={() =>
                     this.props.navigation.navigate("ReceiverDetails", {
                       ITEM: item,
+                      FromMyOfferScreen: true,
                     })
                   }
                 >
