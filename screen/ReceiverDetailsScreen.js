@@ -31,6 +31,7 @@ export default class receiverDetailsScreen extends Component {
       await db.collection("Requests").doc(this.state.docID).update({
         Status: "DonorInterested",
         DonorEmail: firebase.auth().currentUser.email,
+        notifStatus: "unread",
       });
     }, 1000);
     Alert.alert(

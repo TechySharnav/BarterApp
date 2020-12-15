@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import LoginScreen from "./screen/LoginScreen";
 import DrawerNavigator from "./component/DrawerNavigator";

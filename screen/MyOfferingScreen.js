@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, FlatList, Text, TouchableOpacity } from "react-native";
+import { View, FlatList, Text, TouchableOpacity, Alert } from "react-native";
 import db from "../config";
 import { Header, ListItem } from "react-native-elements";
 import firebase from "firebase";
@@ -13,6 +13,13 @@ export default class MyOfferScreen extends Component {
       func: false,
     };
   }
+
+  AskUserforReturnServiceReceived = () => {
+    Alert.alert("Warning", "Did you received the Return Service?", [
+      { text: "No" },
+      { text: "Yes" },
+    ]);
+  };
 
   fetchRequests = async () => {
     this.unsub = await db
@@ -62,25 +69,27 @@ export default class MyOfferScreen extends Component {
           }}
           data={this.state.allRequests}
           renderItem={({ item, index }) => (
-            <ListItem
-              containerStyle={{ backgroundColor: "#f8d0d0" }}
-              titleStyle={{ color: "#534859", fontWeight: "bold" }}
-              titleStyle={{ color: "#465461", fontWeight: "bold" }}
-              title={`Name: ${item.Name}`}
-              subtitle={`Service: ${item.RequestedService}`}
-              rightElement={() => (
-                <TouchableOpacity
-                  onPress={() =>
-                    this.props.navigation.navigate("ReceiverDetails", {
-                      ITEM: item,
-                      FromMyOfferScreen: true,
-                    })
-                  }
-                >
-                  <Text>View</Text>
-                </TouchableOpacity>
-              )}
-            />
+            <TouchableOpacity onPress={this.AskUserforReturnServiceReceived}>
+              <ListItem
+                containerStyle={{ backgroundColor: "#f8d0d0" }}
+                titleStyle={{ color: "#534859", fontWeight: "bold" }}
+                titleStyle={{ color: "#465461", fontWeight: "bold" }}
+                title={`Name: ${item.Name}`}
+                subtitle={`Service: ${item.RequestedService}`}
+                rightElement={() => (
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate("ReceiverDetails", {
+                        ITEM: item,
+                        FromMyOfferScreen: true,
+                      })
+                    }
+                  >
+                    <Text>View</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </TouchableOpacity>
           )}
           keyExtractor={(item, index) => {
             index.toString();
