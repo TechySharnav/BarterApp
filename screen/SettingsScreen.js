@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import { Header } from "react-native-elements";
+import MyHeader from "../component/MyHeader.js";
+
 import db from "../config";
 import firebase from "firebase";
 
@@ -62,13 +63,7 @@ export default class SettingsScreen extends Component {
   render() {
     return (
       <View>
-        <Header
-          backgroundColor="#f9688d"
-          centerComponent={{
-            text: "Barter App",
-            style: { color: "#ecf3f4", fontSize: 18, fontWeight: "bold" },
-          }}
-        ></Header>
+        <MyHeader navigation={this.props.navigation} />
         <TextInput
           onChangeText={(txt) => {
             this.setState({ Name: txt });

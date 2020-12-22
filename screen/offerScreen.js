@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, FlatList, Text, TouchableOpacity } from "react-native";
-import { Header, ListItem } from "react-native-elements";
+import { ListItem } from "react-native-elements";
+import MyHeader from "../component/MyHeader.js";
 import db from "../config";
 import firebase from "firebase";
 
@@ -51,13 +52,7 @@ export default class offerScreen extends Component {
   render() {
     return (
       <View>
-        <Header
-          backgroundColor="#f9688d"
-          centerComponent={{
-            text: "Barter App",
-            style: { color: "#ecf3f4", fontSize: 18, fontWeight: "bold" },
-          }}
-        ></Header>
+        <MyHeader navigation={this.props.navigation} />
         <FlatList
           contentContainerStyle={{
             alignSelf: "center",

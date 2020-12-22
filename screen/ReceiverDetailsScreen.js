@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View, ScrollView, Alert } from "react-native";
 import { Header, Card } from "react-native-elements";
 import db from "../config";
 import firebase from "firebase";
+import MyHeader from "../component/MyHeader.js";
 
 export default class receiverDetailsScreen extends Component {
   constructor() {
@@ -44,13 +45,7 @@ export default class receiverDetailsScreen extends Component {
     var fromMyOfferScreen = this.props.navigation.getParam("FromMyOfferScreen");
     return (
       <View>
-        <Header
-          backgroundColor="#f9688d"
-          centerComponent={{
-            text: "Barter App",
-            style: { color: "#ecf3f4", fontSize: 18, fontWeight: "bold" },
-          }}
-        ></Header>
+        <MyHeader navigation={this.props.navigation} />
 
         <ScrollView contentContainerStyle={{ paddingBottom: 125 }}>
           <Card
