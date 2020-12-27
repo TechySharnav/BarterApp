@@ -32,10 +32,29 @@ export default class requestScreen extends Component {
       isVisible: false,
       Status: "pending",
       allRequests: [],
+      allDocID: [],
       func: false,
+      index: 0,
       buttonDisabled: true,
     };
   }
+
+  updateStatus = async (id) => {
+    var i = this.state.index;
+    db.collection("Requests").doc(this.state.allDocID[i]).update({
+      Status: "received",
+    });
+    this.state.allRequests.splice(i, 1);
+    this.state.allDocID.splice(i, 1);
+    this.setState({ buttonDisabledL: false });
+  };
+
+  AskUserforServiceReceived = () => {
+    Alert.alert("Warning", "Did you received the Service?", [
+      { text: "No" },
+      { text: "Yes", onPress: this.updateStatus },
+    ]);
+  };
 
   getRequests = async () => {
     var email = await firebase.auth().currentUser.email;
@@ -47,6 +66,7 @@ export default class requestScreen extends Component {
           query.docs.map(async (doc) => {
             await this.setState({
               allRequests: [...this.state.allRequests, doc.data()],
+              allDocID: [...this.state.allDocID, doc.id],
             });
           });
         },
@@ -92,13 +112,7 @@ export default class requestScreen extends Component {
                 justifyContent: "flex-end",
               }}
             >
-              <Header
-                backgroundColor="#f9688d"
-                centerComponent={{
-                  text: "Barter App",
-                  style: { color: "#ecf3f4", fontSize: 18, fontWeight: "bold" },
-                }}
-              ></Header>
+              <MyHeader navigation={this.props.navigation} />
               <TextInput
                 onChangeText={(txt) => {
                   this.setState({ name: txt });
@@ -217,7 +231,7 @@ export default class requestScreen extends Component {
       this.setState({ func: true });
       this.setState({ buttonDisabled: false });
       for (var i in this.state.allRequests) {
-        if (this.state.allRequests[i].Status === "pending") {
+        if (this.state.allRequests[i].Status !== "received") {
           this.setState({ buttonDisabled: true });
         }
       }
@@ -261,22 +275,38 @@ export default class requestScreen extends Component {
           }}
           data={this.state.allRequests}
           renderItem={({ item, index }) => (
-            <ListItem
-              containerStyle={{
-                backgroundColor: "#f8d0d0",
-                borderColor: "#534859",
-                borderWidth: 4,
-                opacity: item.Status === "pending" ? 0.5 : 1,
+            <TouchableOpacity
+              disabled={
+                item.Status !== "received" ? !this.state.buttonDisabled : true
+              }
+              onPress={() => {
+                this.setState(
+                  {
+                    index:
+                      item.Status !== "received" ? index : this.state.index,
+                  },
+
+                  this.AskUserforServiceReceived
+                );
               }}
-              titleStyle={{ color: "#534859", fontWeight: "bold" }}
-              title={"Name: " + item.Name}
-              subtitle={`Requested: ${item.RequestedService} \nStatus: ${item.Status}`}
-              rightElement={() => (
-                <TouchableOpacity>
-                  <Text>View</Text>
-                </TouchableOpacity>
-              )}
-            />
+            >
+              <ListItem
+                containerStyle={{
+                  backgroundColor: "#f8d0d0",
+                  borderColor: "#534859",
+                  borderWidth: 4,
+                  opacity: item.Status !== "received" ? 0.5 : 1,
+                }}
+                titleStyle={{ color: "#534859", fontWeight: "bold" }}
+                title={"Name: " + item.Name}
+                subtitle={`Requested: ${item.RequestedService} \nStatus: ${item.Status}`}
+                rightElement={() => (
+                  <TouchableOpacity>
+                    <Text>View</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </TouchableOpacity>
           )}
           keyExtractor={(item, index) => {
             index.toString();

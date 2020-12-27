@@ -30,7 +30,7 @@ export default class offerScreen extends Component {
     }, 1000);
     setTimeout(() => {
       this.setState({ func: true });
-    }, 1000);
+    }, 2000);
   }
 
   getRequests = async () => {

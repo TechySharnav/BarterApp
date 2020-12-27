@@ -6,6 +6,7 @@ import NotificationScreen from "../screen/NotificationScreen";
 import CustomSideBar from "./CustomSideBar";
 import { Image } from "react-native";
 import MyOfferScreen from "../screen/MyOfferingScreen";
+import MyReceivedServiceScreen from "../screen/MyReceivedServiceScreen";
 const DrawerNavigator = createDrawerNavigator(
   {
     Home: {
@@ -70,6 +71,7 @@ const DrawerNavigator = createDrawerNavigator(
         ),
       },
     },
+    ReceivedService: { screen: MyReceivedServiceScreen },
   },
   {
     contentComponent: CustomSideBar,

@@ -1,10 +1,22 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, FlatList, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  Alert,
+  Dimensions,
+  Animated,
+} from "react-native";
 import { ListItem } from "react-native-elements";
 import MyHeader from "../component/MyHeader.js";
 import db from "../config";
 import firebase from "firebase";
 import { TouchableOpacity } from "react-native";
+import { SwipeListView } from "react-native-swipe-list-view";
+
+import SwipeableFlatList from "../component/SwipeableFlatList";
 
 export default class NotificationScreen extends Component {
   constructor() {
@@ -12,15 +24,52 @@ export default class NotificationScreen extends Component {
 
     this.state = {
       allNotif: [],
+      allDocID: [],
       DonorName: "",
       index: 0,
     };
   }
-  AskUserforServiceReceived = () => {
-    Alert.alert("Warning", "Did you received the Service?", [
-      { text: "No" },
-      { text: "Yes" },
-    ]);
+  onSwipeValueChange = (swipeData) => {
+    var allNotif = this.state.allNotifications;
+    console.log(swipeData);
+    const { key, value } = swipeData;
+    console.log("Func EXECUTED");
+    if (value <= 0) {
+      var index = allNotif.findIndex((item) => item.key === key);
+      this.state.allNotifications.splice(index, 1);
+      this.updateNotificationAsRead(this.state.allDocID[index]);
+      this.state.allDocID.splice(index, 1);
+    }
+  };
+
+  updateNotificationAsRead = async (i) => {
+    await db.collection("Requests").doc(i).update({
+      notifStatus: "read",
+    });
+  };
+
+  renderItem = (data) => {
+    console.log(this.state.allNotifications, "RenderItem called");
+    return (
+      <Animated.View>
+        <ListItem
+          style={{ alignItems: "center", marginTop: 5 }}
+          containerStyle={{
+            backgroundColor: "#f8d0d0",
+            borderColor: "#534859",
+            borderWidth: 4,
+          }}
+          titleStyle={{ color: "#534859", fontWeight: "bold" }}
+          title={`Service: ${data.item.RequestedService}`}
+          subtitle={
+            data.item.Status === "DonorInterested"
+              ? this.state.DonorName +
+                " has shown Interest in donating this service"
+              : this.state.DonorName + " has donated you the service"
+          }
+        />
+      </Animated.View>
+    );
   };
 
   getNotification = async () => {
@@ -30,9 +79,10 @@ export default class NotificationScreen extends Component {
       .where("notifStatus", "==", "unread")
       .get();
 
-    q.docs.map((doc) =>
-      this.setState({ allNotif: [...this.state.allNotif, doc.data()] })
-    );
+    q.docs.map((doc) => {
+      this.setState({ allNotif: [...this.state.allNotif, doc.data()] });
+      this.setState({ allDocID: [...this.state.allDocID, doc.id] });
+    });
 
     for (var i in this.state.allNotif) {
       if (this.state.allNotif[i].Status === "DonorInterested") {
@@ -56,10 +106,14 @@ export default class NotificationScreen extends Component {
   }
 
   render() {
-    return (
-      <View>
-        <MyHeader navigation={this.props.navigation} />
-        <FlatList
+    if (this.state.allNotif.length <= 0) {
+      return (
+        <View>
+          <MyHeader navigation={this.props.navigation} />
+
+          <Text>No Notifications</Text>
+
+          {/*<FlatList
           contentContainerStyle={{
             alignSelf: "center",
             borderWidth: 4,
@@ -84,8 +138,22 @@ export default class NotificationScreen extends Component {
           keyExtractor={(item, index) => {
             index.toString();
           }}
-        />
-      </View>
-    );
+        />*/}
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          <MyHeader navigation={this.props.navigation} />
+          <Animated.View>
+            <SwipeListView
+              onSwipeValueChange={this.onSwipeValueChange}
+              data={this.state.allNotif}
+              renderItem={this.renderItem}
+            />
+          </Animated.View>
+        </View>
+      );
+    }
   }
 }
