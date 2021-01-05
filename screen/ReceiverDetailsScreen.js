@@ -8,14 +8,17 @@ import MyHeader from "../component/MyHeader.js";
 export default class receiverDetailsScreen extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = { Price: null };
   }
 
   componentDidMount() {
     var detail = this.props.navigation.getParam("ITEM");
+    var INRPRICE = this.props.navigation.getParam("INRPrice");
     this.setState(detail, () => {
       console.log(this.state);
     });
+
+    this.setState({ Price: INRPRICE });
   }
 
   updateStatus = async () => {
@@ -55,6 +58,7 @@ export default class receiverDetailsScreen extends Component {
             <Card>
               <Text>Requested: {this.state.RequestedService}</Text>
               <Text>In-Return: {this.state.ReturnService}</Text>
+              <Text>Price: {this.state.Price}</Text>
             </Card>
           </Card>
           <Card

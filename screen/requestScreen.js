@@ -36,8 +36,65 @@ export default class requestScreen extends Component {
       func: false,
       index: 0,
       buttonDisabled: true,
+      userCurrencyCode: "",
+      allCurrencyCodes: [],
+      dataSource: [],
+      price: "",
+      flag: false,
     };
   }
+
+  getInputCode = () => {
+    if (this.state.userCurrencyCode.length > 0) {
+      var el = [];
+
+      for (var i = 0; i < this.state.allCurrencyCodes.length; i++) {
+        if (
+          this.state.allCurrencyCodes[i]
+            .toLowerCase()
+            .includes(this.state.userCurrencyCode.toLowerCase())
+        ) {
+          el.push(this.state.allCurrencyCodes[i]);
+        }
+      }
+      this.setState({ dataSource: el, flag: true });
+    }
+  };
+
+  renderItemforCodeList = ({ item }) => {
+    if (this.state.userCurrencyCode.length > 0 && this.state.flag) {
+      return (
+        <View>
+          <TouchableOpacity
+            onPress={() =>
+              this.setState({ userCurrencyCode: item, flag: false })
+            }
+          >
+            <Text>{item}</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      return <View></View>;
+    }
+  };
+
+  getCurrencyCodes = async () => {
+    var keys = [];
+    await fetch(
+      "http://data.fixer.io/api/latest?access_key=004847c48f311a38d719e4a7a01a52fc&format=1"
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((resData) => {
+        for (var i in resData.rates) {
+          keys.push(i);
+        }
+      });
+
+    this.setState({ allCurrencyCodes: keys });
+  };
 
   updateStatus = async (id) => {
     var i = this.state.index;
@@ -46,7 +103,7 @@ export default class requestScreen extends Component {
     });
     this.state.allRequests.splice(i, 1);
     this.state.allDocID.splice(i, 1);
-    this.setState({ buttonDisabledL: false });
+    this.setState({ buttonDisabled: false });
   };
 
   AskUserforServiceReceived = () => {
@@ -92,6 +149,8 @@ export default class requestScreen extends Component {
       Status: "pending",
       Name: this.state.Name,
       UID: eval(this.generateUID()),
+      currencyCode: this.state.userCurrencyCode,
+      price: this.state.price,
     });
     Alert.alert("Success", "Request Added Successfully");
     this.setState({ isVisible: false });
@@ -181,6 +240,46 @@ export default class requestScreen extends Component {
                 style={{
                   display: "flex",
                   flexDirection: "row",
+                  marginLeft: 10,
+                }}
+              >
+                <TextInput
+                  value={this.state.userCurrencyCode}
+                  maxLength={3}
+                  style={[
+                    styles.textInputStyle,
+                    { width: 220, marginRight: 20 },
+                  ]}
+                  placeholder="Currency Code"
+                  onChangeText={(txt) => {
+                    this.setState({ userCurrencyCode: txt }, () => {
+                      this.getInputCode();
+                    });
+                  }}
+                ></TextInput>
+                <TextInput
+                  value={this.state.price}
+                  keyboardType="number-pad"
+                  style={[styles.textInputStyle, { width: 100 }]}
+                  placeholder="Price"
+                  onChangeText={(txt) => {
+                    this.setState({ price: txt });
+                  }}
+                ></TextInput>
+              </View>
+              <FlatList
+                contentContainerStyle={{
+                  backgroundColor: "#f8d0d0",
+                  borderColor: "#534859",
+                  borderWidth: 4,
+                }}
+                data={this.state.dataSource}
+                renderItem={this.renderItemforCodeList}
+              />
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
                   justifyContent: "center",
                 }}
               >
@@ -226,6 +325,7 @@ export default class requestScreen extends Component {
 
   async componentDidMount() {
     await this.getDetails();
+    await this.getCurrencyCodes();
     await this.getRequests();
     setTimeout(() => {
       this.setState({ func: true });
@@ -238,6 +338,7 @@ export default class requestScreen extends Component {
     }, 2000);
 
     this.forceUpdate();
+    this.getInputCode();
   }
 
   render() {
