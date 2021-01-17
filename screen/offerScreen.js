@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import { RFValue } from "react-native-responsive-fontsize";
 import { View, FlatList, Text, TouchableOpacity } from "react-native";
 import { ListItem } from "react-native-elements";
 import MyHeader from "../component/MyHeader.js";

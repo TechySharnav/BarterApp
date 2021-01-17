@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import { RFValue } from "react-native-responsive-fontsize";
 import { Text, TouchableOpacity, View, ScrollView, Alert } from "react-native";
 import { Header, Card } from "react-native-elements";
 import db from "../config";
@@ -53,7 +55,7 @@ export default class receiverDetailsScreen extends Component {
         <ScrollView contentContainerStyle={{ paddingBottom: 125 }}>
           <Card
             title="Good/Service Information"
-            titleStyle={{ fontSize: 20, fontWeight: "bold" }}
+            titleStyle={{ fontSize: RFValue(20), fontWeight: "bold" }}
           >
             <Card>
               <Text>Requested: {this.state.RequestedService}</Text>
@@ -63,7 +65,7 @@ export default class receiverDetailsScreen extends Component {
           </Card>
           <Card
             title="Requester Information"
-            titleStyle={{ fontSize: 20, fontWeight: "bold" }}
+            titleStyle={{ fontSize: RFValue(20), fontWeight: "bold" }}
           >
             <Card>
               <Text>Name: {this.state.Name}</Text>

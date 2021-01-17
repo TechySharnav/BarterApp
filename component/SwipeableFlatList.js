@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import { RFValue } from "react-native-responsive-fontsize";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { View, Dimensions, Animated } from "react-native";
 import { ListItem } from "react-native-elements";

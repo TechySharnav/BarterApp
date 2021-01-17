@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import { RFValue } from "react-native-responsive-fontsize";
 import SettingsScreen from "../screen/SettingsScreen";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import TabNavigator from "./TabNavigator";

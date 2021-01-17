@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { RFValue } from "react-native-responsive-fontsize";
 import {
   StyleSheet,
   Text,
@@ -110,7 +111,11 @@ export default class LoginScreen extends Component {
                 backgroundColor="#f9688d"
                 centerComponent={{
                   text: "Barter App",
-                  style: { color: "#ecf3f4", fontSize: 18, fontWeight: "bold" },
+                  style: {
+                    color: "#ecf3f4",
+                    fontSize: RFValue(18),
+                    fontWeight: "bold",
+                  },
                 }}
               ></Header>
               <TextInput
@@ -235,7 +240,11 @@ export default class LoginScreen extends Component {
             backgroundColor="#f9688d"
             centerComponent={{
               text: "Barter App",
-              style: { color: "#ecf3f4", fontSize: 18, fontWeight: "bold" },
+              style: {
+                color: "#ecf3f4",
+                fontSize: RFValue(18),
+                fontWeight: "bold",
+              },
             }}
           ></Header>
 
@@ -245,7 +254,7 @@ export default class LoginScreen extends Component {
             style={{
               color: "#534859",
               textAlign: "center",
-              fontSize: 12,
+              fontSize: RFValue(12),
               marginTop: 20,
             }}
           >

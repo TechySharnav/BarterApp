@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import { RFValue } from "react-native-responsive-fontsize";
 import { View, FlatList, Text, TouchableOpacity, Alert } from "react-native";
 import db from "../config";
 import { ListItem } from "react-native-elements";

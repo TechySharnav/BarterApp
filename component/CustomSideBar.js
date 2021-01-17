@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import { RFValue } from "react-native-responsive-fontsize";
 import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
 import { DrawerItems } from "react-navigation-drawer";
 import firebase from "firebase";

@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import { RFValue } from "react-native-responsive-fontsize";
 import { View } from "react-native";
 import { Header, Badge, Icon } from "react-native-elements";
 import db from "../config";
@@ -44,7 +46,7 @@ export default class extends Component {
           name="bell"
           type="font-awesome"
           color="#ecf3f4"
-          size={20}
+          size={RFValue(20)}
           onPress={() => this.props.navigation.navigate("Notification")}
         />
       </View>
@@ -65,7 +67,11 @@ export default class extends Component {
         backgroundColor="#f9688d"
         centerComponent={{
           text: "Barter App",
-          style: { color: "#ecf3f4", fontSize: 18, fontWeight: "bold" },
+          style: {
+            color: "#ecf3f4",
+            fontSize: RFValue(18),
+            fontWeight: "bold",
+          },
         }}
         rightComponent={<this.displayBellwithBadge />}
       ></Header>

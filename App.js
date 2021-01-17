@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import { RFValue } from "react-native-responsive-fontsize";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import LoginScreen from "./screen/LoginScreen";
 import DrawerNavigator from "./component/DrawerNavigator";

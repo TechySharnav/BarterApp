@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import { RFValue } from "react-native-responsive-fontsize";
 import { Image } from "react-native";
 import requestScreen from "../screen/requestScreen";
 import StackNavigator from "./StackNavigator";

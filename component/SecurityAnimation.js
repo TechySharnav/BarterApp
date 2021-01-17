@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import { RFValue } from "react-native-responsive-fontsize";
 import { KeyboardAvoidingView, Animated } from "react-native";
 import LottieView from "lottie-react-native";
 
